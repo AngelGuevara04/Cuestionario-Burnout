@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación de Bienestar Docente</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Cuestionario de Burnout</h1>
+            <p>Este cuestionario tiene como propósito conocer tu estado actual de bienestar laboral. Tus respuestas son confidenciales.</p>
+            <p class="instrucciones">Selecciona la frecuencia con la que experimentas cada una de las siguientes situaciones.</p>
+        </header>
+
+        <main>
+            <form id="burnout-form">
+                <div id="preguntas-container">
+                    </div>
+                
+                <button type="submit" class="btn-submit">Calcular Resultados</button>
+            </form>
+
+            <div id="resultados-modal" class="oculto">
+                <h2>Resultados de la Evaluación</h2>
+                <div class="resultados-grid">
+                    <div class="card">
+                        <h3>Cansancio Emocional</h3>
+                        <p id="res-ce" class="score">0</p>
+                    </div>
+                    <div class="card">
+                        <h3>Despersonalización</h3>
+                        <p id="res-d" class="score">0</p>
+                    </div>
+                    <div class="card">
+                        <h3>Realización Personal</h3>
+                        <p id="res-rp" class="score">0</p>
+                    </div>
+                </div>
+                <div class="diagnostico">
+                    <h3 id="nivel-riesgo">Nivel de Riesgo</h3>
+                    <p id="mensaje-retroalimentacion"></p>
+                </div>
+                <button id="btn-reiniciar" class="btn-secondary">Realizar de nuevo</button>
+            </div>
+        </main>
+    </div>
+    <script src="js/app.js"></script>
+</body>
+</html>
