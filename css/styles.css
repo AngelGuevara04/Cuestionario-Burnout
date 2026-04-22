@@ -45,7 +45,8 @@ body {
 .instrucciones {
     font-weight: 600;
     color: #555;
-    margin-top: 10px;
+    margin-bottom: 15px;
+    display: block;
 }
 
 .pregunta-item {
@@ -62,13 +63,20 @@ body {
     display: block;
 }
 
-select {
+select, input[type="number"] {
     width: 100%;
     padding: 10px;
     border: 1px solid var(--border-color);
     border-radius: 5px;
     font-size: 16px;
     background-color: white;
+    font-family: inherit;
+}
+
+input[type="number"]:focus, select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(0,86,179,0.2);
 }
 
 .btn-submit, .btn-secondary {
@@ -126,12 +134,11 @@ select {
     background-color: #eef2f5;
 }
 
-/* Clases de riesgo inyectadas por JS */
 .riesgo-alto { border-left: 5px solid var(--danger-color); }
 .riesgo-medio { border-left: 5px solid var(--warning-color); }
 .riesgo-bajo { border-left: 5px solid var(--success-color); }
 
-/* Nuevos estilos para el formulario de registro */
+/* Estilos para el formulario de registro inicial */
 .subtitulo {
     margin-bottom: 20px;
     color: var(--primary-color);
@@ -152,20 +159,4 @@ select {
     font-weight: 600;
     margin-bottom: 8px;
     color: #444;
-}
-
-input[type="number"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    font-size: 16px;
-    font-family: inherit;
-    background-color: white;
-}
-
-input[type="number"]:focus, select:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(0,86,179,0.2);
 }

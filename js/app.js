@@ -1,7 +1,7 @@
-// Variable para almacenar los hábitos y cruzar datos después
+// Variable global para almacenar los hábitos y cruzar datos después
 let datosUsuario = {};
 
-// Cuestionario y opciones (Igual que antes)
+// Cuestionario MBI y opciones
 const cuestionarioBurnout = [
     { id: 1, texto: "Me siento emocionalmente agotado por mi trabajo.", subescala: "CE" },
     { id: 2, texto: "Me siento cansado al final de la jornada de trabajo.", subescala: "CE" },
@@ -70,13 +70,18 @@ document.addEventListener("DOMContentLoaded", () => {
     formRegistro.addEventListener("submit", (e) => {
         e.preventDefault();
         
-        // Capturar los datos del usuario
+        // Capturar los datos del usuario (todas las variables sociodemográficas)
         datosUsuario = {
             tipoTrabajo: document.getElementById("tipo-trabajo").value,
             edad: document.getElementById("edad").value,
             genero: document.getElementById("genero").value,
             horasSueno: document.getElementById("horas-sueno").value,
-            ansiedad: document.getElementById("ansiedad").value
+            ansiedad: document.getElementById("ansiedad").value,
+            dependientes: document.getElementById("dependientes").value,
+            modalidad: document.getElementById("modalidad").value,
+            horasTrabajo: document.getElementById("horas-trabajo").value,
+            tiempoTraslado: document.getElementById("tiempo-traslado").value,
+            desconexion: document.getElementById("desconexion").value
         };
 
         // Ocultar pantalla 1 y mostrar pantalla 2
@@ -122,6 +127,7 @@ function procesarResultados(CE, D, RP) {
     let retroalimentacion = "";
     let claseCSS = "";
 
+    // Lógica de evaluación basada en el documento
     if (CE >= 27 || D >= 10 || RP <= 33) {
         nivelRiesgo = "Riesgo Alto";
         retroalimentacion = "Alerta de agotamiento emocional severo. Te sugerimos acudir a las autoridades de tu institución y a un profesional de la salud mental. También es útil apoyarse en técnicas de mindfulness (por ejemplo, con autores como Paul Gilbert, Jon Kabat-Zinn, Kristin Neff y Daniel J. Siegel).";
@@ -144,11 +150,13 @@ function procesarResultados(CE, D, RP) {
     
     document.getElementById("nivel-riesgo").innerText = `Nivel detectado: ${nivelRiesgo}`;
     
-    // Al final del resultado, podemos ver en consola (para desarrollo) la correlación
-    console.log("Datos para Análisis de Ciencia de Datos:", {
+    // Preparación de datos para análisis de Ciencia de Datos
+    console.log("=== DATOS CAPTURADOS PARA ANÁLISIS ===");
+    console.log({
         habitos: datosUsuario,
         resultadosBurnout: { CE, D, RP, nivelRiesgo }
     });
+    console.log("======================================");
 
     document.getElementById("mensaje-retroalimentacion").innerHTML = retroalimentacion + 
     "<br><br><small><i>Nota importante: Este cuestionario es una herramienta de tamizaje y no reemplaza un diagnóstico clínico profesional.</i></small>";
@@ -158,4 +166,5 @@ function procesarResultados(CE, D, RP) {
 
     document.getElementById("pantalla-cuestionario").classList.add("oculto");
     document.getElementById("resultados-modal").classList.remove("oculto");
+    window.scrollTo(0, 0); // Subir la vista para ver los resultados
 }

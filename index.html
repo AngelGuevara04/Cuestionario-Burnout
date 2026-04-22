@@ -11,7 +11,7 @@
     <div class="container">
         <header class="header">
             <h1>Evaluación de Bienestar Docente</h1>
-            <p>Este estudio busca comprender la relación entre tus hábitos diarios y tu bienestar laboral. Tus respuestas son confidenciales.</p>
+            <p>Este estudio busca comprender la relación entre tus hábitos diarios y tu bienestar laboral. Tus respuestas son estrictamente confidenciales.</p>
         </header>
 
         <main>
@@ -54,6 +54,61 @@
                             <option value="" disabled selected>Seleccione...</option>
                             <option value="Si">Sí</option>
                             <option value="No">No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>¿Tienes personas dependientes a tu cargo?</label>
+                        <select id="dependientes" required>
+                            <option value="" disabled selected>Seleccione...</option>
+                            <option value="No">No</option>
+                            <option value="Hijos menores">Sí, hijos menores de edad</option>
+                            <option value="Adultos mayores">Sí, adultos mayores o familiares que requieren cuidados continuos</option>
+                            <option value="Ambos">Sí, ambos</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>¿En qué modalidad realizas tu ocupación principal?</label>
+                        <select id="modalidad" required>
+                            <option value="" disabled selected>Seleccione...</option>
+                            <option value="Presencial">100% Presencial</option>
+                            <option value="Hibrido">Híbrido (mezcla de ambos)</option>
+                            <option value="Remoto">100% Remoto (Home office/Clases en línea)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>¿Cuántas horas a la semana dedicas activamente a tu trabajo o estudios?</label>
+                        <select id="horas-trabajo" required>
+                            <option value="" disabled selected>Seleccione...</option>
+                            <option value="Menos de 20">Menos de 20 horas</option>
+                            <option value="20 a 40">De 20 a 40 horas</option>
+                            <option value="41 a 50">De 41 a 50 horas</option>
+                            <option value="Mas de 50">Más de 50 horas</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>En un día normal, ¿cuánto tiempo total inviertes en trasladarte (ida y vuelta) a tu lugar de trabajo o estudio?</label>
+                        <select id="tiempo-traslado" required>
+                            <option value="" disabled selected>Seleccione...</option>
+                            <option value="Desde casa">Trabajo/estudio desde casa</option>
+                            <option value="Menos de 30m">Menos de 30 minutos</option>
+                            <option value="Entre 30m y 1h">Entre 30 minutos y 1 hora</option>
+                            <option value="Entre 1h y 2h">Entre 1 y 2 horas</option>
+                            <option value="Mas de 2h">Más de 2 horas</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>¿Con qué frecuencia revisas correos, mensajes o atiendes asuntos de tu trabajo/estudio fuera de tu horario establecido (noches o fines de semana)?</label>
+                        <select id="desconexion" required>
+                            <option value="" disabled selected>Seleccione...</option>
+                            <option value="Nunca">Nunca</option>
+                            <option value="Rara vez">Rara vez</option>
+                            <option value="A veces">A veces</option>
+                            <option value="Casi siempre">Casi siempre</option>
                         </select>
                     </div>
 
