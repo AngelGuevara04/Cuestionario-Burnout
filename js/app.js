@@ -1,4 +1,7 @@
-// Paso 1 - Carga de preguntas [cite: 65]
+// Variable para almacenar los hábitos y cruzar datos después
+let datosUsuario = {};
+
+// Cuestionario y opciones (Igual que antes)
 const cuestionarioBurnout = [
     { id: 1, texto: "Me siento emocionalmente agotado por mi trabajo.", subescala: "CE" },
     { id: 2, texto: "Me siento cansado al final de la jornada de trabajo.", subescala: "CE" },
@@ -35,12 +38,16 @@ const opcionesRespuesta = [
 ];
 
 document.addEventListener("DOMContentLoaded", () => {
-    const contenedor = document.getElementById("preguntas-container");
-    const formulario = document.getElementById("burnout-form");
+    const contenedorPreguntas = document.getElementById("preguntas-container");
+    const formRegistro = document.getElementById("registro-form");
+    const formBurnout = document.getElementById("burnout-form");
+    
+    const pantallaRegistro = document.getElementById("pantalla-registro");
+    const pantallaCuestionario = document.getElementById("pantalla-cuestionario");
     const modalResultados = document.getElementById("resultados-modal");
     const btnReiniciar = document.getElementById("btn-reiniciar");
 
-    // Al cargar la página, se genera dinámicamente los 22 items con sus menús desplegables de selección [cite: 66]
+    // Generar preguntas dinámicamente
     cuestionarioBurnout.forEach((pregunta, index) => {
         const item = document.createElement("div");
         item.classList.add("pregunta-item");
@@ -56,19 +63,37 @@ document.addEventListener("DOMContentLoaded", () => {
                 ${opcionesHTML}
             </select>
         `;
-        contenedor.appendChild(item);
+        contenedorPreguntas.appendChild(item);
     });
 
-    // Paso 2 - Captura de respuestas [cite: 67] y Paso 3 - Cálculo automático [cite: 68]
-    formulario.addEventListener("submit", (e) => {
+    // Evento 1: Guardar Hábitos y pasar al Cuestionario
+    formRegistro.addEventListener("submit", (e) => {
+        e.preventDefault();
+        
+        // Capturar los datos del usuario
+        datosUsuario = {
+            tipoTrabajo: document.getElementById("tipo-trabajo").value,
+            edad: document.getElementById("edad").value,
+            genero: document.getElementById("genero").value,
+            horasSueno: document.getElementById("horas-sueno").value,
+            ansiedad: document.getElementById("ansiedad").value
+        };
+
+        // Ocultar pantalla 1 y mostrar pantalla 2
+        pantallaRegistro.classList.add("oculto");
+        pantallaCuestionario.classList.remove("oculto");
+        window.scrollTo(0, 0); // Subir la vista al inicio
+    });
+
+    // Evento 2: Calcular Burnout y mostrar Resultados
+    formBurnout.addEventListener("submit", (e) => {
         e.preventDefault();
         
         let CE = 0, D = 0, RP = 0;
-        const selects = formulario.querySelectorAll("select");
+        const selects = formBurnout.querySelectorAll("select");
 
-        // Al enviar el formulario, se itera sobre cada subescala, se suman los valores correspondientes y calcula el total de cada dimensión [cite: 69]
         selects.forEach(select => {
-            let valor = parseInt(select.value) || 0; // Se asigna automáticamente el valor 0 para evitar errores de cálculo [cite: 40]
+            let valor = parseInt(select.value) || 0;
             let subescala = select.getAttribute("data-subescala");
 
             if (subescala === "CE") CE += valor;
@@ -79,54 +104,58 @@ document.addEventListener("DOMContentLoaded", () => {
         procesarResultados(CE, D, RP);
     });
 
+    // Evento 3: Reiniciar todo el proceso
     btnReiniciar.addEventListener("click", () => {
-        formulario.reset();
-        formulario.style.display = "block";
+        formRegistro.reset();
+        formBurnout.reset();
+        datosUsuario = {}; // Limpiar datos de memoria
+        
         modalResultados.classList.add("oculto");
+        pantallaCuestionario.classList.add("oculto");
+        pantallaRegistro.classList.remove("oculto");
         window.scrollTo(0, 0);
     });
 });
 
-// Paso 4 - Clasificación
 function procesarResultados(CE, D, RP) {
     let nivelRiesgo = "";
     let retroalimentacion = "";
     let claseCSS = "";
 
-    // Criterios de Interpretación basados en el documento
-    // Nivel de Riesgo Alto
     if (CE >= 27 || D >= 10 || RP <= 33) {
         nivelRiesgo = "Riesgo Alto";
-        retroalimentacion = "Se alerta sobre agotamiento emocional severo. Se recomienda canalización con autoridades institucionales y profesional de salud mental. Puedes buscar apoyo en recursos de mindfulness (ej. Paul Gilbert, Jon Kabat-Zinn, Kristin Neff y Daniel J. Siegel).";
+        retroalimentacion = "Alerta de agotamiento emocional severo. Te sugerimos acudir a las autoridades de tu institución y a un profesional de la salud mental. También es útil apoyarse en técnicas de mindfulness (por ejemplo, con autores como Paul Gilbert, Jon Kabat-Zinn, Kristin Neff y Daniel J. Siegel).";
         claseCSS = "riesgo-alto";
     } 
-    // Nivel de Riesgo Moderado
     else if ((CE >= 19 && CE <= 26) || (D >= 6 && D <= 9) || (RP >= 34 && RP <= 39)) {
         nivelRiesgo = "Riesgo Moderado";
-        retroalimentacion = "Se advierte sobre el posible inicio de desgaste laboral. Se recomienda reflexión, prácticas de mindfulness y, si es necesario, consulta con profesional de salud mental. Autores de referencia: Paul Gilbert, Jon Kabat-Zinn, Kristin Neff y Daniel J. Siegel.";
+        retroalimentacion = "Advertencia sobre un posible inicio de desgaste laboral. Te recomendamos hacer una pausa para la reflexión, practicar mindfulness y, de ser necesario, consultar con un profesional. Autores recomendados: Paul Gilbert, Jon Kabat-Zinn, Kristin Neff y Daniel J. Siegel.";
         claseCSS = "riesgo-medio";
     } 
-    // Nivel Sin Riesgo
     else {
         nivelRiesgo = "Nivel Sin Riesgo";
-        retroalimentacion = "Felicidades. Se reconoce tu bienestar. Te invitamos a apoyar a tus compañeros.";
+        retroalimentacion = "¡Felicidades! Mantienes un buen nivel de bienestar. Te invitamos a compartir tus estrategias y apoyar a tus compañeros.";
         claseCSS = "riesgo-bajo";
     }
 
-    // Paso 5 - Visualización de resultados
     document.getElementById("res-ce").innerText = CE;
     document.getElementById("res-d").innerText = D;
     document.getElementById("res-rp").innerText = RP;
     
     document.getElementById("nivel-riesgo").innerText = `Nivel detectado: ${nivelRiesgo}`;
-    document.getElementById("mensaje-retroalimentacion").innerText = retroalimentacion;
+    
+    // Al final del resultado, podemos ver en consola (para desarrollo) la correlación
+    console.log("Datos para Análisis de Ciencia de Datos:", {
+        habitos: datosUsuario,
+        resultadosBurnout: { CE, D, RP, nivelRiesgo }
+    });
+
+    document.getElementById("mensaje-retroalimentacion").innerHTML = retroalimentacion + 
+    "<br><br><small><i>Nota importante: Este cuestionario es una herramienta de tamizaje y no reemplaza un diagnóstico clínico profesional.</i></small>";
 
     const divDiagnostico = document.querySelector(".diagnostico");
     divDiagnostico.className = `diagnostico ${claseCSS}`;
 
-    document.getElementById("burnout-form").style.display = "none";
+    document.getElementById("pantalla-cuestionario").classList.add("oculto");
     document.getElementById("resultados-modal").classList.remove("oculto");
-    
-    // Nota de limitación
-    document.getElementById("mensaje-retroalimentacion").innerHTML += "<br><br><small><i>Nota: El instrumento no sustituye una evaluación clínica profesional; es una herramienta de tamizaje.</i></small>";
 }

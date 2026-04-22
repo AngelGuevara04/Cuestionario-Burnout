@@ -130,3 +130,42 @@ select {
 .riesgo-alto { border-left: 5px solid var(--danger-color); }
 .riesgo-medio { border-left: 5px solid var(--warning-color); }
 .riesgo-bajo { border-left: 5px solid var(--success-color); }
+
+/* Nuevos estilos para el formulario de registro */
+.subtitulo {
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    background: var(--secondary-color);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #444;
+}
+
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: inherit;
+    background-color: white;
+}
+
+input[type="number"]:focus, select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(0,86,179,0.2);
+}

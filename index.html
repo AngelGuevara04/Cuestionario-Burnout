@@ -10,18 +10,66 @@
 <body>
     <div class="container">
         <header class="header">
-            <h1>Cuestionario de Burnout</h1>
-            <p>Este cuestionario tiene como propósito conocer tu estado actual de bienestar laboral. Tus respuestas son confidenciales.</p>
-            <p class="instrucciones">Selecciona la frecuencia con la que experimentas cada una de las siguientes situaciones.</p>
+            <h1>Evaluación de Bienestar Docente</h1>
+            <p>Este estudio busca comprender la relación entre tus hábitos diarios y tu bienestar laboral. Tus respuestas son confidenciales.</p>
         </header>
 
         <main>
-            <form id="burnout-form">
-                <div id="preguntas-container">
+            <div id="pantalla-registro">
+                <h2 class="subtitulo">Paso 1: Perfil y Hábitos</h2>
+                <form id="registro-form">
+                    <div class="form-group">
+                        <label>¿Qué tipo de contrato/trabajo tiene?</label>
+                        <select id="tipo-trabajo" required>
+                            <option value="" disabled selected>Seleccione...</option>
+                            <option value="Base/Plaza">Base / Plaza definitiva</option>
+                            <option value="Contrato">Por contrato / Temporal</option>
+                            <option value="Horas">Por horas</option>
+                        </select>
                     </div>
-                
-                <button type="submit" class="btn-submit">Calcular Resultados</button>
-            </form>
+                    
+                    <div class="form-group">
+                        <label>¿Cuántos años tiene?</label>
+                        <input type="number" id="edad" min="18" max="90" required placeholder="Ej. 35">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Género</label>
+                        <select id="genero" required>
+                            <option value="" disabled selected>Seleccione...</option>
+                            <option value="Femenino">Femenino</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Otro">Otro / Prefiero no decirlo</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Número de horas de sueño promedio (por noche)</label>
+                        <input type="number" id="horas-sueno" min="1" max="14" step="0.5" required placeholder="Ej. 6.5">
+                    </div>
+
+                    <div class="form-group">
+                        <label>¿Percibe tener síntomas de ansiedad frecuentemente?</label>
+                        <select id="ansiedad" required>
+                            <option value="" disabled selected>Seleccione...</option>
+                            <option value="Si">Sí</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Continuar al Cuestionario</button>
+                </form>
+            </div>
+
+            <div id="pantalla-cuestionario" class="oculto">
+                <h2 class="subtitulo">Paso 2: Inventario de Burnout</h2>
+                <p class="instrucciones">Selecciona la frecuencia con la que experimentas cada una de las siguientes situaciones.</p>
+                <form id="burnout-form">
+                    <div id="preguntas-container">
+                        </div>
+                    <button type="submit" class="btn-submit">Calcular Resultados Totales</button>
+                </form>
+            </div>
 
             <div id="resultados-modal" class="oculto">
                 <h2>Resultados de la Evaluación</h2>
@@ -43,7 +91,7 @@
                     <h3 id="nivel-riesgo">Nivel de Riesgo</h3>
                     <p id="mensaje-retroalimentacion"></p>
                 </div>
-                <button id="btn-reiniciar" class="btn-secondary">Realizar de nuevo</button>
+                <button id="btn-reiniciar" class="btn-secondary">Realizar nueva evaluación</button>
             </div>
         </main>
     </div>
