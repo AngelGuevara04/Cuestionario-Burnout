@@ -1,9 +1,4 @@
-// Configuración de Supabase
-const SUPABASE_URL = 'https://jnolyhztvufgvhyrlntp.supabase.co/rest/v1/'; // Reemplazar
-const SUPABASE_KEY = 'sb_publishable_ueAMkdrE4KIaPJqMnydRGg_ASVKIbpU'; // Reemplazar
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// Variable global para almacenar los hábitos
+// Variable global para almacenar los hábitos y cruzar datos después
 let datosUsuario = {};
 
 // Cuestionario MBI y opciones
@@ -42,6 +37,7 @@ const opcionesRespuesta = [
     { valor: 6, etiqueta: "Todos los días" }
 ];
 
+// Todo se ejecuta hasta que la página carga de forma segura
 document.addEventListener("DOMContentLoaded", () => {
     const contenedorPreguntas = document.getElementById("preguntas-container");
     const formRegistro = document.getElementById("registro-form");
@@ -71,9 +67,9 @@ document.addEventListener("DOMContentLoaded", () => {
         contenedorPreguntas.appendChild(item);
     });
 
-    // Guardar Hábitos y pasar al Cuestionario
+    // Evento 1: Guardar Hábitos y pasar al Cuestionario
     formRegistro.addEventListener("submit", (e) => {
-        e.preventDefault();
+        e.preventDefault(); // Esto detiene la recarga de la página
         
         datosUsuario = {
             tipoTrabajo: document.getElementById("tipo-trabajo").value,
@@ -93,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.scrollTo(0, 0); 
     });
 
-    // Calcular Burnout y mostrar Resultados
+    // Evento 2: Calcular Burnout y mostrar Resultados
     formBurnout.addEventListener("submit", (e) => {
         e.preventDefault();
         
@@ -112,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
         procesarResultados(CE, D, RP);
     });
 
-    // Reiniciar proceso
+    // Evento 3: Reiniciar proceso
     btnReiniciar.addEventListener("click", () => {
         formRegistro.reset();
         formBurnout.reset();
@@ -148,35 +144,45 @@ async function procesarResultados(CE, D, RP) {
         claseCSS = "riesgo-bajo";
     }
 
-    // Insertar datos en la base de datos Supabase
+    // ==========================================
+    // CONEXIÓN A SUPABASE (Aislada y Segura)
+    // ==========================================
     try {
-        const { error } = await supabase
-            .from('respuestas_burnout')
-            .insert([{
-                tipo_trabajo: datosUsuario.tipoTrabajo,
-                edad: datosUsuario.edad,
-                genero: datosUsuario.genero,
-                horas_sueno: datosUsuario.horasSueno,
-                ansiedad: datosUsuario.ansiedad,
-                dependientes: datosUsuario.dependientes,
-                modalidad: datosUsuario.modalidad,
-                horas_trabajo: datosUsuario.horasTrabajo,
-                tiempo_traslado: datosUsuario.tiempoTraslado,
-                desconexion: datosUsuario.desconexion,
-                ce: CE,
-                d: D,
-                rp: RP,
-                nivel_riesgo: nivelRiesgo
-            }]);
+        const SUPABASE_URL = 'https://jnolyhztvufgvhyrlntp.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impub2x5aHp0dnVmZ3ZoeXJsbnRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MDQzOTAsImV4cCI6MjA5NDE4MDM5MH0.jQt0ii8CuSqxqigDK9XUfEOh_TK_WN_4OFikxeCPAi4'; // <- Pega aquí tu clave anon (Suele iniciar con eyJ...)
+        
+        // Verifica si la librería de Supabase logró cargar desde el HTML
+        if (window.supabase) {
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            const { error } = await supabase
+                .from('respuestas_burnout')
+                .insert([{
+                    tipo_trabajo: datosUsuario.tipoTrabajo,
+                    edad: datosUsuario.edad,
+                    genero: datosUsuario.genero,
+                    horas_sueno: datosUsuario.horasSueno,
+                    ansiedad: datosUsuario.ansiedad,
+                    dependientes: datosUsuario.dependientes,
+                    modalidad: datosUsuario.modalidad,
+                    horas_trabajo: datosUsuario.horasTrabajo,
+                    tiempo_traslado: datosUsuario.tiempoTraslado,
+                    desconexion: datosUsuario.desconexion,
+                    ce: CE,
+                    d: D,
+                    rp: RP,
+                    nivel_riesgo: nivelRiesgo
+                }]);
 
-        if (error) throw error;
-        console.log("¡Datos guardados exitosamente en la nube!");
+            if (error) throw error;
+            console.log("¡Datos guardados exitosamente en la base de datos!");
+        } else {
+            console.warn("La plataforma no pudo conectarse a Supabase (posiblemente bloqueado o sin internet).");
+        }
     } catch (err) {
-        console.error("Error al guardar en Supabase:", err.message);
-        alert("Hubo un problema guardando los resultados en la base de datos.");
+        console.error("Hubo un error al intentar subir la información a la nube:", err.message);
     }
 
-    // Actualizar la interfaz
+    // Actualizar la interfaz visual (Esto se ejecuta SIEMPRE, conecte o no a Supabase)
     document.getElementById("res-ce").innerText = CE;
     document.getElementById("res-d").innerText = D;
     document.getElementById("res-rp").innerText = RP;
