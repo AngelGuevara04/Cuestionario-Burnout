@@ -1,6 +1,6 @@
 // Configuración de Supabase
-const SUPABASE_URL = 'TU_URL_DE_SUPABASE'; // Reemplazar
-const SUPABASE_KEY = 'TU_ANON_KEY_DE_SUPABASE'; // Reemplazar
+const SUPABASE_URL = 'https://jnolyhztvufgvhyrlntp.supabase.co/rest/v1/'; // Reemplazar
+const SUPABASE_KEY = 'sb_publishable_ueAMkdrE4KIaPJqMnydRGg_ASVKIbpU'; // Reemplazar
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Variable global para almacenar los hábitos
