@@ -1,4 +1,9 @@
-// Variable global para almacenar los hábitos y cruzar datos después
+// Configuración de Supabase
+const SUPABASE_URL = 'TU_URL_DE_SUPABASE'; // Reemplazar
+const SUPABASE_KEY = 'TU_ANON_KEY_DE_SUPABASE'; // Reemplazar
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Variable global para almacenar los hábitos
 let datosUsuario = {};
 
 // Cuestionario MBI y opciones
@@ -66,16 +71,15 @@ document.addEventListener("DOMContentLoaded", () => {
         contenedorPreguntas.appendChild(item);
     });
 
-    // Evento 1: Guardar Hábitos y pasar al Cuestionario
+    // Guardar Hábitos y pasar al Cuestionario
     formRegistro.addEventListener("submit", (e) => {
         e.preventDefault();
         
-        // Capturar los datos del usuario (todas las variables sociodemográficas)
         datosUsuario = {
             tipoTrabajo: document.getElementById("tipo-trabajo").value,
-            edad: document.getElementById("edad").value,
+            edad: parseInt(document.getElementById("edad").value),
             genero: document.getElementById("genero").value,
-            horasSueno: document.getElementById("horas-sueno").value,
+            horasSueno: parseFloat(document.getElementById("horas-sueno").value),
             ansiedad: document.getElementById("ansiedad").value,
             dependientes: document.getElementById("dependientes").value,
             modalidad: document.getElementById("modalidad").value,
@@ -84,13 +88,12 @@ document.addEventListener("DOMContentLoaded", () => {
             desconexion: document.getElementById("desconexion").value
         };
 
-        // Ocultar pantalla 1 y mostrar pantalla 2
         pantallaRegistro.classList.add("oculto");
         pantallaCuestionario.classList.remove("oculto");
-        window.scrollTo(0, 0); // Subir la vista al inicio
+        window.scrollTo(0, 0); 
     });
 
-    // Evento 2: Calcular Burnout y mostrar Resultados
+    // Calcular Burnout y mostrar Resultados
     formBurnout.addEventListener("submit", (e) => {
         e.preventDefault();
         
@@ -109,11 +112,11 @@ document.addEventListener("DOMContentLoaded", () => {
         procesarResultados(CE, D, RP);
     });
 
-    // Evento 3: Reiniciar todo el proceso
+    // Reiniciar proceso
     btnReiniciar.addEventListener("click", () => {
         formRegistro.reset();
         formBurnout.reset();
-        datosUsuario = {}; // Limpiar datos de memoria
+        datosUsuario = {}; 
         
         modalResultados.classList.add("oculto");
         pantallaCuestionario.classList.add("oculto");
@@ -122,7 +125,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-function procesarResultados(CE, D, RP) {
+// Función asíncrona para evaluar resultados y guardar en Supabase
+async function procesarResultados(CE, D, RP) {
     let nivelRiesgo = "";
     let retroalimentacion = "";
     let claseCSS = "";
@@ -144,20 +148,40 @@ function procesarResultados(CE, D, RP) {
         claseCSS = "riesgo-bajo";
     }
 
+    // Insertar datos en la base de datos Supabase
+    try {
+        const { error } = await supabase
+            .from('respuestas_burnout')
+            .insert([{
+                tipo_trabajo: datosUsuario.tipoTrabajo,
+                edad: datosUsuario.edad,
+                genero: datosUsuario.genero,
+                horas_sueno: datosUsuario.horasSueno,
+                ansiedad: datosUsuario.ansiedad,
+                dependientes: datosUsuario.dependientes,
+                modalidad: datosUsuario.modalidad,
+                horas_trabajo: datosUsuario.horasTrabajo,
+                tiempo_traslado: datosUsuario.tiempoTraslado,
+                desconexion: datosUsuario.desconexion,
+                ce: CE,
+                d: D,
+                rp: RP,
+                nivel_riesgo: nivelRiesgo
+            }]);
+
+        if (error) throw error;
+        console.log("¡Datos guardados exitosamente en la nube!");
+    } catch (err) {
+        console.error("Error al guardar en Supabase:", err.message);
+        alert("Hubo un problema guardando los resultados en la base de datos.");
+    }
+
+    // Actualizar la interfaz
     document.getElementById("res-ce").innerText = CE;
     document.getElementById("res-d").innerText = D;
     document.getElementById("res-rp").innerText = RP;
     
     document.getElementById("nivel-riesgo").innerText = `Nivel detectado: ${nivelRiesgo}`;
-    
-    // Preparación de datos para análisis de Ciencia de Datos
-    console.log("=== DATOS CAPTURADOS PARA ANÁLISIS ===");
-    console.log({
-        habitos: datosUsuario,
-        resultadosBurnout: { CE, D, RP, nivelRiesgo }
-    });
-    console.log("======================================");
-
     document.getElementById("mensaje-retroalimentacion").innerHTML = retroalimentacion + 
     "<br><br><small><i>Nota importante: Este cuestionario es una herramienta de tamizaje y no reemplaza un diagnóstico clínico profesional.</i></small>";
 
@@ -166,5 +190,5 @@ function procesarResultados(CE, D, RP) {
 
     document.getElementById("pantalla-cuestionario").classList.add("oculto");
     document.getElementById("resultados-modal").classList.remove("oculto");
-    window.scrollTo(0, 0); // Subir la vista para ver los resultados
+    window.scrollTo(0, 0); 
 }

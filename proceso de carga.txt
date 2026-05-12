@@ -3,3 +3,5 @@ git add .
 git commit -m "actualización"
 
 git push
+
+contraseña de supabase base de datos burnour: Ang3lito0912202
